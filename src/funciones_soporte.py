@@ -188,3 +188,22 @@ def detectar_outliers(df):
         fig.delaxes(axes[-1])
 
     plt.tight_layout()
+
+
+def clasificar_tipo_coche(year):
+    if pd.isna(year):
+        return "Sin registro"
+    elif 1886 <= year <= 1919:
+        return "Veterano"
+    elif 1920 <= year <= 1939:
+        return "Vintage"
+    elif 1940 <= year <= 1979:
+        return "Clásico"
+    elif 1980 <= year <= 1999:
+        return "Joven Clásico"
+    elif 2000 <= year <= 2014:
+        return "Moderno Clásico"
+    elif 2015 <= year <= 2024:
+        return "Moderno"
+    else:
+        return "Año fuera de rango"
