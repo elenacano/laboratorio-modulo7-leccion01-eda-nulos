@@ -9,6 +9,9 @@ import math
 import warnings
 warnings.filterwarnings('ignore')
 
+#-------------------------------------------------------------------------------------------------
+#                                    EXPLORACIÓN DATAFRAME
+#-------------------------------------------------------------------------------------------------
 
 def exploracion_dataframe(dataframe):
     """
@@ -97,7 +100,6 @@ def plot_categoricas(df):
 def relacion_vr_categoricas(df, variable_respuesta):
 
     df_cat = separar_df(df)[1]
-
     columnas_categoticas = df_cat.columns
     num_filas = math.ceil(len(columnas_categoticas)/2)
     fig, axes = plt.subplots(num_filas,2, figsize=(15,10))
@@ -117,7 +119,6 @@ def relacion_vr_categoricas(df, variable_respuesta):
         axes[indice].set_xlabel("")
         axes[indice].tick_params(axis='x', rotation=45)
 
-
     if len(columnas_categoticas) % 2 == 1:
         fig.delaxes(axes[-1])
 
@@ -127,7 +128,6 @@ def relacion_vr_categoricas(df, variable_respuesta):
 def relacion_vr_numericas(df, variable_respuesta):
 
     df_num = separar_df(df)[0]
-
     columnas_num = df_num.columns
     num_filas = math.ceil(len(columnas_num)/2)
     fig, axes = plt.subplots(num_filas,2, figsize=(15,10))
@@ -148,13 +148,13 @@ def relacion_vr_numericas(df, variable_respuesta):
             axes[indice].set_xlabel("")
             #axes[indice].tick_params(axis='x', rotation=45)
 
-
     if len(columnas_num) % 2 == 1:
         fig.delaxes(axes[-1])
 
     plt.tight_layout()
 
 
+# ---------------------------------- Gráfico de correlación ------------------------------------
 def heatmap_correlacion(df):
     df_corr = df.corr(numeric_only=True)
     mascara = np.triu(np.ones_like(df_corr, dtype=np.bool))
@@ -163,25 +163,27 @@ def heatmap_correlacion(df):
     sns.heatmap(df_corr, annot=True, vmin=-1, vmax=1, mask=mascara, cmap="coolwarm")
 
 
-def detectar_outliers(df):
+# -------------------------Detección de outliers mediante boxplot ------------------------------------
+def detectar_outliers(df, figsize=(15,10), rotate=True):
     
     df_num =separar_df(df)[0]
 
     columnas_numericas = df_num.columns
     num_filas = math.ceil(len(columnas_numericas)/2)
-    fig, axes = plt.subplots(num_filas,2, figsize=(15,10))
+    fig, axes = plt.subplots(num_filas,2, figsize=figsize)
     axes = axes.flat
 
     for indice, columna in enumerate(columnas_numericas):
 
         sns.boxplot(df_num, 
                     x=columna,
-                    color="orange",
+                    flierprops={"markersize":4, "markerfacecolor":"red"},
                     ax=axes[indice])
         
         axes[indice].set_title(f"Outliers de {columna}")
         axes[indice].set_xlabel("")
-        axes[indice].tick_params(axis='x', rotation=45)
+        if rotate:
+            axes[indice].tick_params(axis='x', rotation=45)
 
 
     if len(columnas_numericas) % 2 == 1:
